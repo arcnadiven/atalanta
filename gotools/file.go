@@ -36,7 +36,7 @@ func WriteFileInLine(path string, data []string) error {
 	return nil
 }
 
-func getFileSHA1(path string) (string, error) {
+func GetFileSHA1(path string) (string, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return ``, err
@@ -67,7 +67,7 @@ func getFileSHA1(path string) (string, error) {
 	return hex.EncodeToString(hSHA1.Sum(nil)), nil
 }
 
-func getFileMD5(path string) (string, error) {
+func GetFileMD5(path string) (string, error) {
 	file, err := os.Open(path)
 	if err != nil {
 		return ``, err

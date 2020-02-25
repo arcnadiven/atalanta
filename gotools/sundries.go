@@ -1,7 +1,10 @@
 package gotools
 
 import (
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"net/http"
 	"strconv"
 	"strings"
 	"time"
@@ -30,4 +33,24 @@ func KeepFloatNum(src float64, num int) (float64, error) {
 
 func ConvertPercent(src float64) string {
 	return strings.Replace(strconv.FormatFloat(src, 'f', 2, 64)+`%`, `0.`, ``, -1)
+}
+
+func GetLocalPublicIP() (string, error) {
+	client := new(http.Client)
+	resp, err := client.Get(`http://myip.ipip.net/ip`)
+	if err != nil {
+		return ``, err
+	}
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	var (
+		ip = struct {
+			IP string `json:"ip"`
+		}{}
+	)
+	if err := json.Unmarshal(body, &ip); err != nil {
+		return ``, err
+	}
+	return ip.IP, nil
+
 }
