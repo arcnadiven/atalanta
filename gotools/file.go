@@ -10,8 +10,8 @@ import (
 	"strings"
 )
 
-const (
-	hash_block_size = bytes.MB * 1
+var (
+	hash_block_size = int64(bytes.MB * 1)
 )
 
 func ReadFileInLine(path string) ([]string, error) {
@@ -34,6 +34,10 @@ func WriteFileInLine(path string, data []string) error {
 		}
 	}
 	return nil
+}
+
+func SetHashBlock(size int64) {
+	hash_block_size = size
 }
 
 func GetFileSHA1(path string) (string, error) {
