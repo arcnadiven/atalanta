@@ -20,15 +20,9 @@ func CreateLinkList(nums []int) *ListNode {
 			tailPoint = headPoint
 			continue
 		}
-		if tailPoint.Next == nil {
-			tailPoint.Next = &ListNode{
-				Val:  v,
-				Next: nil,
-			}
-		} else {
-			for n := tailPoint; n != nil; n = n.Next {
-				tailPoint = n
-			}
+		tailPoint.Next = &ListNode{
+			Val:  v,
+			Next: nil,
 		}
 		tailPoint = tailPoint.Next
 	}

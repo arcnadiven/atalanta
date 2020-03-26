@@ -41,23 +41,27 @@ func SetStackDepth(n int) {
 	default_stack_depth = n
 }
 
+func String(str string) error {
+	return genXrror(default_code, default_stack_depth, default_file_length, str)
+}
+
 func New(err error) error {
-	return genXrror(default_code, default_stack_depth, default_file_length, err)
+	return genXrror(default_code, default_stack_depth, default_file_length, err.Error())
 }
 
 func NewWithCode(code int, err error) error {
-	return genXrror(code, default_stack_depth, default_file_length, err)
+	return genXrror(code, default_stack_depth, default_file_length, err.Error())
 }
 
 func NewWithDepth(depth int, err error) error {
-	return genXrror(default_code, depth, default_file_length, err)
+	return genXrror(default_code, depth, default_file_length, err.Error())
 }
 
 func NewWithFileLen(fl int, err error) error {
-	return genXrror(default_code, default_stack_depth, fl, err)
+	return genXrror(default_code, default_stack_depth, fl, err.Error())
 }
 
-func genXrror(code, depth, fl int, err error) error {
+func genXrror(code, depth, fl int, str string) error {
 	_, file, line, ok := runtime.Caller(depth)
 	if !ok {
 		file = `unknown file`
@@ -73,6 +77,6 @@ func genXrror(code, depth, fl int, err error) error {
 		Code:  code,
 		Time:  time.Now().Format(std_time_format),
 		Stack: file + `:` + strconv.Itoa(line),
-		Err:   err.Error(),
+		Err:   str,
 	}
 }
