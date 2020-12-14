@@ -28,8 +28,11 @@ func WriteFileInLine(path string, data []string) error {
 		return err
 	}
 	defer file.Close()
-	for _, v := range data {
-		if _, err := file.WriteString(v + "\n"); err != nil {
+	for idx, v := range data {
+		if idx != len(data)-1 {
+			v += "\n"
+		}
+		if _, err := file.WriteString(v); err != nil {
 			return err
 		}
 	}
