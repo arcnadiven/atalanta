@@ -2,7 +2,7 @@ package gotools
 
 //必须是两个有序链表
 
-func mergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
+func MergeTwoLists(l1 *ListNode, l2 *ListNode) *ListNode {
 	if l1 == nil {
 		return l2
 	}

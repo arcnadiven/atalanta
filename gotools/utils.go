@@ -3,6 +3,7 @@ package gotools
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/uniplaces/carbon"
 	"io/ioutil"
 	"net/http"
 	"strconv"
@@ -53,4 +54,8 @@ func GetLocalPublicIP() (string, error) {
 	}
 	return ip.IP, nil
 
+}
+
+func GetStdTS() string {
+	return time.Now().Format(carbon.DefaultFormat)
 }
