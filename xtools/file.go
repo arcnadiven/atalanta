@@ -1,4 +1,4 @@
-package gotools
+package xtools
 
 import (
 	"crypto/md5"

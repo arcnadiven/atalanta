@@ -1,9 +1,33 @@
-package gotools
+package xds
 
 type TreeNode struct {
 	Val   int
 	Left  *TreeNode
 	Right *TreeNode
+}
+
+func (root *TreeNode) AddLeftNode(val int) {
+	if root.Left == nil {
+		root.Left = &TreeNode{
+			Val:   val,
+			Left:  nil,
+			Right: nil,
+		}
+	} else {
+		root.Left.Val = val
+	}
+}
+
+func (root *TreeNode) AddRightNode(val int) {
+	if root.Right == nil {
+		root.Right = &TreeNode{
+			Val:   val,
+			Left:  nil,
+			Right: nil,
+		}
+	} else {
+		root.Right.Val = val
+	}
 }
 
 //允许输入数字与nil
@@ -17,7 +41,7 @@ type TreeNode struct {
 // 		return nil, nil
 // 	}
 // 	for _, v := range list {
-		
+
 // 	}
 // 	return
 // }
