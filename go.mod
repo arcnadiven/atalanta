@@ -1,4 +1,4 @@
-module github.com/arcnadiven/tourmaline
+module github.com/arcnadiven/atalanta
 
 go 1.13
 
