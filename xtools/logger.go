@@ -1,12 +1,14 @@
 package xtools
 
 import (
+	"github.com/astaxie/beego/logs"
+	"github.com/natefinch/lumberjack"
 	"github.com/sirupsen/logrus"
 	"github.com/uniplaces/carbon"
 	"os"
 )
 
-func NewStdLogger() *logrus.Logger {
+func LogrusStdLogger() *logrus.Logger {
 	logger := logrus.New()
 	logger.SetReportCaller(true)
 	logger.SetLevel(logrus.DebugLevel)
@@ -19,19 +21,26 @@ func NewStdLogger() *logrus.Logger {
 	return logger
 }
 
-func NewFileLogger(path string) (*logrus.Logger, error) {
-	logfile, err := os.OpenFile(path, os.O_CREATE|os.O_APPEND|os.O_RDWR, os.ModePerm)
-	if err != nil {
-		return nil, err
-	}
+func LogrusFileLogger(path string) (*logrus.Logger, error) {
 	logger := logrus.New()
 	logger.SetReportCaller(true)
 	logger.SetLevel(logrus.DebugLevel)
-	logger.SetOutput(logfile)
+	logger.SetOutput(&lumberjack.Logger{
+		Filename:   path,
+		MaxSize:    500, // megabytes
+		MaxBackups: 30,
+		MaxAge:     365,   //days
+		Compress:   false, // disabled by default
+	})
 	logger.SetFormatter(&logrus.TextFormatter{
 		ForceColors:     true,
 		FullTimestamp:   true,
 		TimestampFormat: carbon.DefaultFormat,
 	})
 	return logger, nil
+}
+
+func LogsStdLogger() {
+	logs.SetLogFuncCall(true)
+	logs.SetLogFuncCallDepth(3)
 }
