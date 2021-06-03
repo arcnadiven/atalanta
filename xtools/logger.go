@@ -5,23 +5,9 @@ import (
 	"github.com/natefinch/lumberjack"
 	"github.com/sirupsen/logrus"
 	"github.com/uniplaces/carbon"
-	"os"
 )
 
-func LogrusStdLogger() *logrus.Logger {
-	logger := logrus.New()
-	logger.SetReportCaller(true)
-	logger.SetLevel(logrus.DebugLevel)
-	logger.SetOutput(os.Stdout)
-	logger.SetFormatter(&logrus.TextFormatter{
-		ForceColors:     true,
-		FullTimestamp:   true,
-		TimestampFormat: carbon.DefaultFormat,
-	})
-	return logger
-}
-
-func LogrusFileLogger(path string) (*logrus.Logger, error) {
+func FileLogrus(path string) *logrus.Logger {
 	logger := logrus.New()
 	logger.SetReportCaller(true)
 	logger.SetLevel(logrus.DebugLevel)
@@ -37,10 +23,21 @@ func LogrusFileLogger(path string) (*logrus.Logger, error) {
 		FullTimestamp:   true,
 		TimestampFormat: carbon.DefaultFormat,
 	})
-	return logger, nil
+	return logger
 }
 
-func LogsStdLogger() {
+func DefaultLogrus() {
+	logrus.SetReportCaller(true)
+	logrus.SetLevel(logrus.DebugLevel)
+	logrus.SetFormatter(&logrus.TextFormatter{
+		ForceColors:     true,
+		FullTimestamp:   true,
+		TimestampFormat: carbon.DefaultFormat,
+	})
+}
+
+func DefaultLogs() {
 	logs.SetLogFuncCall(true)
 	logs.SetLogFuncCallDepth(3)
+	logs.SetLevel(logs.LevelDebug)
 }

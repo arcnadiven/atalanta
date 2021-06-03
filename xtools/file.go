@@ -4,6 +4,7 @@ import (
 	"crypto/md5"
 	"crypto/sha1"
 	"encoding/hex"
+	"fmt"
 	"github.com/labstack/gommon/bytes"
 	"io/ioutil"
 	"os"
@@ -30,10 +31,13 @@ func WriteFileInLine(path string, data []string) error {
 	defer file.Close()
 	for idx, v := range data {
 		if idx != len(data)-1 {
-			v += "\n"
-		}
-		if _, err := file.WriteString(v); err != nil {
-			return err
+			if _, err := fmt.Fprintln(file, v); err != nil {
+				return err
+			}
+		} else {
+			if _, err := fmt.Fprint(file, v); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
