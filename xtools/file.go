@@ -1,14 +1,14 @@
 package xtools
 
 import (
+	"bufio"
 	"crypto/md5"
 	"crypto/sha1"
 	"encoding/hex"
 	"fmt"
 	"github.com/labstack/gommon/bytes"
-	"io/ioutil"
+	"io"
 	"os"
-	"strings"
 )
 
 var (
@@ -16,11 +16,25 @@ var (
 )
 
 func ReadFileInLine(path string) ([]string, error) {
-	resp, err := ioutil.ReadFile(path)
+	file, err := os.Open(path)
 	if err != nil {
 		return nil, err
 	}
-	return strings.Split(strings.Replace(string(resp), "\r", "", -1), "\n"), nil
+	defer file.Close()
+	lines := []string{}
+	reader := bufio.NewReader(file)
+	for {
+		line, _, err := reader.ReadLine()
+		if err != nil {
+			if err == io.EOF {
+				break
+			} else {
+				return nil, err
+			}
+		}
+		lines = append(lines, string(line))
+	}
+	return lines, nil
 }
 
 func WriteFileInLine(path string, data []string) error {

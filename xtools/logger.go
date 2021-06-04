@@ -7,7 +7,7 @@ import (
 	"github.com/uniplaces/carbon"
 )
 
-func FileLogrus(path string) *logrus.Logger {
+func NewFileLogrus(path string) *logrus.Logger {
 	logger := logrus.New()
 	logger.SetReportCaller(true)
 	logger.SetLevel(logrus.DebugLevel)
@@ -26,7 +26,7 @@ func FileLogrus(path string) *logrus.Logger {
 	return logger
 }
 
-func DefaultLogrus() {
+func UseDefaultLogrus() {
 	logrus.SetReportCaller(true)
 	logrus.SetLevel(logrus.DebugLevel)
 	logrus.SetFormatter(&logrus.TextFormatter{
@@ -36,7 +36,7 @@ func DefaultLogrus() {
 	})
 }
 
-func DefaultLogs() {
+func UseDefaultLogs() {
 	logs.SetLogFuncCall(true)
 	logs.SetLogFuncCallDepth(3)
 	logs.SetLevel(logs.LevelDebug)

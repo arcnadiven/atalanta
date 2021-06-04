@@ -56,6 +56,6 @@ func GetLocalPublicIP() (string, error) {
 
 }
 
-func GetStdTS() string {
+func NowStdFormat() string {
 	return time.Now().Format(carbon.DefaultFormat)
 }

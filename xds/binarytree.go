@@ -1,5 +1,7 @@
 package xds
 
+import "github.com/arcnadiven/atalanta/xtools"
+
 type TreeNode struct {
 	Val   int
 	Left  *TreeNode
@@ -91,4 +93,18 @@ func LevelOrderByQueue(node *TreeNode) []int {
 		queue = queue[max+1:]
 	}
 	return list
+}
+
+func GetMaxNodeNum(col int) int {
+	return xtools.Pow(2, col) - 1
+}
+
+func GetTreeDepth(nodeNum int) int {
+	count := 0
+	for {
+		if nodeNum > GetMaxNodeNum(count) && nodeNum <= GetMaxNodeNum(count+1) {
+			return count + 1
+		}
+		count++
+	}
 }
