@@ -1,12 +1,17 @@
 package xds
 
-import "github.com/arcnadiven/atalanta/xtools"
+import (
+	fmt "fmt"
+	"github.com/arcnadiven/atalanta/xtools"
+)
 
 type TreeNode struct {
 	Val   int
 	Left  *TreeNode
 	Right *TreeNode
 }
+
+const NULL = "null"
 
 func (root *TreeNode) AddLeftNode(val int) {
 	if root.Left == nil {
@@ -32,74 +37,11 @@ func (root *TreeNode) AddRightNode(val int) {
 	}
 }
 
-//允许输入数字与nil
-
-// func coverCreateBTtoList(str string) []int {
-
-// }
-
-// func CreateBinaryTree(list []int) (root *TreeNode, err error) {
-// 	if list == nil {
-// 		return nil, nil
-// 	}
-// 	for _, v := range list {
-
-// 	}
-// 	return
-// }
-
-// func (tn *TreeNode) add(val int) (isSuccess bool) {
-// 	if tn == nil {
-// 		if tn.Left == nil {
-
-// 		} else if tn.Right == nil {
-
-// 		}
-// 	}
-// }
-
-//中序
-
-//先序
-
-//后序
-
-/*
-层级遍历(队列实现方案)：
-1.准备一个队列，元素为节点地址，初始放入根节点
-2.每次遍历会遍历整个队列，每次遍历一层，从队列开头拿出节点，取其非空左右孩子推入队列末尾，由于golang slice的range副本机制，并不会发生队列死循环
-3.遍历结束后整理队列，移除上层的所有节点
-4.当queue为空时，结束遍历
-*/
-
-func LevelOrderByQueue(node *TreeNode) []int {
-	list := []int{}
-	if node == nil {
-		return list
-	}
-	queue := []*TreeNode{node}
-	for len(queue) != 0 {
-		max := 0
-		for idx, node := range queue {
-			max = idx
-			list = append(list, node.Val)
-			if node.Left != nil {
-				queue = append(queue, node.Left)
-			}
-			if node.Right != nil {
-				queue = append(queue, node.Right)
-			}
-		}
-		queue = queue[max+1:]
-	}
-	return list
-}
-
 func GetMaxNodeNum(col int) int {
 	return xtools.Pow(2, col) - 1
 }
 
-func GetTreeDepth(nodeNum int) int {
+func GetBinaryTreeDepth(nodeNum int) int {
 	count := 0
 	for {
 		if nodeNum > GetMaxNodeNum(count) && nodeNum <= GetMaxNodeNum(count+1) {
@@ -107,4 +49,98 @@ func GetTreeDepth(nodeNum int) int {
 		}
 		count++
 	}
+}
+
+//LeetCode用，levelOrder序列化，节点缺失时使用null代替
+func MarshalBinaryTree(src []interface{}) *TreeNode {
+	if len(src) == 0 {
+		return nil
+	}
+	if src[0] == nil {
+		return nil
+	}
+	root := &TreeNode{}
+	if val, ok := src[0].(float64); ok {
+		root.Val = int(val)
+	} else {
+		panic("root node value is not a number")
+	}
+	currentLevel := []*TreeNode{root} //level Order需要维护一个临时队列
+	srcIdx := 1
+	for srcIdx < len(src) {
+		maxIdx := 0
+		for curIdx, node := range currentLevel {
+			//尝试分配左子节点
+			if srcIdx == len(src) { //判断是否越界
+				break
+			}
+			{
+				if val, ok := src[srcIdx].(float64); ok { //判断是否为int,有int则补一位
+					lChild := &TreeNode{Val: int(val)} //那我怎么关联上源地址？？？
+					currentLevel = append(currentLevel, lChild)
+					node.Left = lChild
+				} else {
+					if src[srcIdx] == nil {
+					} else {
+						panic(fmt.Sprintf("node: %d left child value is not number", node.Val))
+					}
+				}
+			}
+			srcIdx++
+
+			//尝试分配右子节点
+			if srcIdx == len(src) { //判断是否越界
+				break
+			}
+			{
+				if val, ok := src[srcIdx].(float64); ok { //判断是否为int,有int则补一位
+					rChild := &TreeNode{Val: int(val)} //那我怎么关联上源地址？？？
+					currentLevel = append(currentLevel, rChild)
+					node.Right = rChild
+				} else {
+					if src[srcIdx] == nil {
+					} else {
+						panic(fmt.Sprintf("node: %d right child value is not number", node.Val))
+					}
+				}
+			}
+			srcIdx++
+
+			//更新currentLevel临时队列的下标
+			maxIdx = curIdx
+		}
+		currentLevel = currentLevel[maxIdx+1:]
+	}
+	return root
+}
+
+//自动填充null
+func LevelOrder(root *TreeNode) []interface{} {
+	result := []interface{}{}
+	if root == nil {
+		return nil
+	}
+	lastLevel := []*TreeNode{root}
+	for len(lastLevel) != 0 {
+		lastIndex := 0
+		for idx, node := range lastLevel {
+			if node == nil {
+				result = append(result, NULL)
+				continue
+			}
+			result = append(result, node.Val)
+			lastLevel = append(lastLevel, node.Left)
+			lastLevel = append(lastLevel, node.Right)
+			lastIndex = idx
+		}
+		lastLevel = lastLevel[lastIndex+1:]
+	}
+	idx := 0
+	for i := len(result) - 1; i >= 0; i-- {
+		if result[i] != NULL {
+			idx = i
+			break
+		}
+	}
+	return result[:idx+1]
 }

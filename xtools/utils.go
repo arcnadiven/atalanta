@@ -6,6 +6,8 @@ import (
 	"github.com/uniplaces/carbon"
 	"io/ioutil"
 	"net/http"
+	"os"
+	"os/signal"
 	"strconv"
 	"strings"
 	"time"
@@ -58,4 +60,10 @@ func GetLocalPublicIP() (string, error) {
 
 func NowStdFormat() string {
 	return time.Now().Format(carbon.DefaultFormat)
+}
+
+func Hang() {
+	ch := make(chan os.Signal)
+	signal.Notify(ch, os.Interrupt, os.Kill)
+	<-ch
 }
