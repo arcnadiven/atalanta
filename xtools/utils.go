@@ -3,7 +3,6 @@ package xtools
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/uniplaces/carbon"
 	"io/ioutil"
 	"net/http"
 	"os"
@@ -11,6 +10,8 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/uniplaces/carbon"
 )
 
 const (
@@ -38,9 +39,11 @@ func ConvertPercent(src float64) string {
 	return strings.Replace(strconv.FormatFloat(src, 'f', 2, 64)+`%`, `0.`, ``, -1)
 }
 
+const myip = `http://myip.ipip.net/ip`
+
 func GetLocalPublicIP() (string, error) {
 	client := new(http.Client)
-	resp, err := client.Get(`http://myip.ipip.net/ip`)
+	resp, err := client.Get(myip)
 	if err != nil {
 		return ``, err
 	}
@@ -55,10 +58,9 @@ func GetLocalPublicIP() (string, error) {
 		return ``, err
 	}
 	return ip.IP, nil
-
 }
 
-func NowStdFormat() string {
+func TimeNow() string {
 	return time.Now().Format(carbon.DefaultFormat)
 }
 
